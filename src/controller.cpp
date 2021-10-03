@@ -1,0 +1,27 @@
+#include "../include/controller.h"
+
+Controller::Controller(Factory *factory_param) {
+    factory = factory_param;
+    ui = nullptr;
+}
+
+void Controller::Work() {
+    ui = factory->GetUserInterface(this);
+    ui->Start();
+}
+
+void Controller::EncodeMessage(Code &code_param) {
+    factory->GetEncoder(code_param.GetCodeType())->Encode(code_param);
+}
+
+int Controller::DecodeMessage(Code &code_param) {
+    return factory->GetDecoder(code_param.GetCodeType())->Decode(code_param);
+}
+
+std::vector<Stats> Controller::GetStats(Code &code_param) {
+    return factory->GetStatistics()->GetStats(
+            code_param,
+            factory->GetEncoder(code_param.GetCodeType()),
+            factory->GetDecoder(code_param.GetCodeType())
+            );
+}
