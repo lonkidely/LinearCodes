@@ -2,12 +2,10 @@
 
 Controller::Controller(Factory *factory_param) {
     factory = factory_param;
-    ui = nullptr;
 }
 
 void Controller::Work() {
-    ui = factory->GetUserInterface(this);
-    ui->Start();
+    factory->GetUserInterface(this)->Start();
 }
 
 void Controller::EncodeMessage(Code &code_param) {

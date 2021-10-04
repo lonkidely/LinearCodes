@@ -8,7 +8,6 @@
 class Controller {
 private:
     Factory *factory;
-    UI *ui;
 public:
     Controller(Factory *factory_param);
 

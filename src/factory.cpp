@@ -10,13 +10,15 @@ Factory::Factory(TypeOfUserInterface ui_type_param) {
     decoders = new Decoder *[decoders_size];
 
     ui_type = ui_type_param;
+    ui = nullptr;
 }
 
 
 UI *Factory::GetUserInterface(Controller *controller) {
     switch (ui_type) {
         case kCLI:
-            ui = new CLI(controller);
+            if (ui == nullptr)
+                ui = new CLI(controller);
             break;
         default:
 
