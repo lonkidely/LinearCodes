@@ -8,6 +8,8 @@ class Controller;
 
 class CLI : public UI {
 private:
+    static const int kMaxLengthCodeForStats = 11;
+
     std::wstring input_message;
     Controller *controller;
 
@@ -16,6 +18,10 @@ private:
     void Decode();
 
     void GetStatistic();
+
+    bool IsCodeCorrect(std::wstring &message);
+
+    void ReadCode(std::wstring &message);
 
 public:
 

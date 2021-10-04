@@ -53,6 +53,28 @@ void CLI::Start() {
     }
 }
 
+bool CLI::IsCodeCorrect(std::wstring &message) {
+    bool code_is_correct = true;
+    for (int i = 0; i < message.length(); ++i) {
+        if ((int) (message[i] - '0') != 0 && (int) (message[i] - '0') != 1)
+            code_is_correct = false;
+    }
+    return code_is_correct;
+}
+
+void CLI::ReadCode(std::wstring &message) {
+    bool is_correct_code = false;
+    while (!is_correct_code) {
+        is_correct_code = true;
+        PrintMessage(L"Введите сообщение (последовательность из 0 и 1 без пробелов)");
+        message = ReadMessage();
+        if (!IsCodeCorrect(message)) {
+            PrintMessage(L"Вы ввели некорректное значение");
+            is_correct_code = false;
+        }
+    }
+}
+
 void CLI::Encode() {
     bool encode_is_not_ended = true;
     std::wstring message;
@@ -66,25 +88,14 @@ void CLI::Encode() {
             PrintMessage(L"Вы ввели некорректное значение");
             continue;
         }
-        int command = (int)(message[0] - '0');
-        if (command < 0 || command > 2){
+        int command = (int) (message[0] - '0');
+        if (command < 0 || command > 2) {
             PrintMessage(L"Вы ввели некорректное значение");
             continue;
         }
         if (command == 0)
             return;
-        bool is_correct_code = false;
-        while (!is_correct_code) {
-            PrintMessage(L"Введите сообщение для кодирования (последовательность из 0 и 1 без пробелов)");
-            message = ReadMessage();
-            is_correct_code = true;
-            for (int i = 0; i < message.length(); ++i) {
-                if (message[i] != '1' && message[i] != '0')
-                    is_correct_code = false;
-            }
-            if (!is_correct_code)
-                PrintMessage(L"Вы ввели некорректное значение");
-        }
+        ReadCode(message);
         TypeOfCode toc;
         switch (command) {
             case 1:
@@ -122,25 +133,14 @@ void CLI::Decode() {
             PrintMessage(L"Вы ввели некорректное значение");
             continue;
         }
-        int command = (int)(message[0] - '0');
-        if (command < 0 || command > 2){
+        int command = (int) (message[0] - '0');
+        if (command < 0 || command > 2) {
             PrintMessage(L"Вы ввели некорректное значение");
             continue;
         }
         if (command == 0)
             return;
-        bool is_correct_code = false;
-        while (!is_correct_code) {
-            PrintMessage(L"Введите сообщение для декодирования (последовательность из 0 и 1 без пробелов)");
-            message = ReadMessage();
-            is_correct_code = true;
-            for (int i = 0; i < message.length(); ++i) {
-                if (message[i] != '1' && message[i] != '0')
-                    is_correct_code = false;
-            }
-            if (!is_correct_code)
-                PrintMessage(L"Вы ввели некорректное значение");
-        }
+        ReadCode(message);
         TypeOfCode toc;
         switch (command) {
             case 1:
@@ -168,15 +168,24 @@ void CLI::Decode() {
 
 void CLI::GetStatistic() {
     std::wstring message;
-    PrintMessage(L"Введите сообщение для статистики (последовательность из 0 и 1 без пробелов)");
-    message = ReadMessage();
-    int command = (int)(message[0] - '0');
+
+    bool message_is_correct = false;
+    while (!message_is_correct) {
+        message_is_correct = true;
+        ReadCode(message);
+        if (message.length() > kMaxLengthCodeForStats) {
+            PrintMessage(L"Вы ввели слишком длинную последовательность");
+            message_is_correct = false;
+        }
+    }
+    int command = (int) (message[0] - '0');
     TypeOfCode toc = kHamming;
     std::reverse(message.begin(), message.end());
     Code code = Code(message, toc);
     std::vector<Stats> stats = controller->GetStats(code);
     controller->EncodeMessage(code);
-    for (int i = 0; i < code.GetLength(); ++i){
-        std::wcout << "i = " << i + 1 << " " << stats[i].SummaryCountErrors << " " << stats[i].FoundedErrorsCount << " " <<stats[i].FixesCount << " " << stats[i].FindingRate << " " << stats[i].FixingRate << "\n";
+    for (int i = 0; i < code.GetLength(); ++i) {
+        std::wcout << "i = " << i + 1 << " " << stats[i].SummaryCountErrors << " " << stats[i].FoundedErrorsCount << " "
+                   << stats[i].FixesCount << " " << stats[i].FindingRate << " " << stats[i].FixingRate << "\n";
     }
 }
