@@ -50,7 +50,7 @@ int CountCombinations(int n, int k) {
 
 bool IsCorrectNumber(std::wstring &str) {
     bool is_correct = true;
-    for (int i = 0; i < str.length(); ++i) {
+    for (size_t i = 0; i < str.length(); ++i) {
         if (str[i] < (wchar_t) '0' || str[i] > (wchar_t) '9')
             is_correct = false;
     }
