@@ -3,11 +3,10 @@
 
 #include "encoder.h"
 #include "decoder.h"
-#include "hamming_encoder.h"
-#include "hamming_decoder.h"
 #include "ui.h"
-#include "cli.h"
 #include "statistics.h"
+
+class Controller;
 
 class Factory {
 private:

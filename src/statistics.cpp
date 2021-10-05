@@ -1,5 +1,5 @@
 #include "../include/statistics.h"
-#include <iostream>
+#include "../include/utils.h"
 
 void Statistics::ApplyErrorCode(Code &code_param, int position) {
     code_param.SetBit(position, code_param.GetBit(position) ^ 1);
@@ -38,7 +38,7 @@ std::vector<Stats> Statistics::GetStats(Code &code, Encoder *encoder, Decoder *d
         max_number += Power(2, freq - 1);
         stats[freq - 1].SummaryCountErrors = CountCombinations(length, freq);
     }
-    std::wcout << max_number << "\n";
+
     std::vector<short> bits(length, 0);
     int cnt = 0;
     for (int i = 1; i <= max_number; ++i) {

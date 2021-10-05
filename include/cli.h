@@ -2,7 +2,7 @@
 #define LINEARCODES_CLI_H
 
 #include "ui.h"
-#include <string>
+#include "code.h"
 
 class Controller;
 
@@ -10,8 +10,17 @@ class CLI : public UI {
 private:
     static const int kMaxLengthCodeForStats = 11;
 
-    std::wstring input_message;
     Controller *controller;
+
+    bool GetChoiceResult(int lower_bound, int upper_bound, int &choice);
+
+    bool IsCodeCorrect(std::wstring &message);
+
+    std::wstring ReadCodeString();
+
+    Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type);
+
+    Code ReadCode(TypeOfCode &code_type);
 
     void Encode();
 
@@ -19,9 +28,6 @@ private:
 
     void GetStatistic();
 
-    bool IsCodeCorrect(std::wstring &message);
-
-    void ReadCode(std::wstring &message);
 
 public:
 

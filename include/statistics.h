@@ -3,7 +3,6 @@
 
 #include "encoder.h"
 #include "decoder.h"
-#include "utils.h"
 #include <vector>
 
 struct Stats {

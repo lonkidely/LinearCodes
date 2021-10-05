@@ -2,8 +2,6 @@
 #define LINEARCODES_CONTROLLER_H
 
 #include "factory.h"
-#include "statistics.h"
-#include "ui.h"
 
 class Controller {
 private:

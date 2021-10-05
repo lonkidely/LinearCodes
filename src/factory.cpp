@@ -1,4 +1,7 @@
 #include "../include/factory.h"
+#include "../include/cli.h"
+#include "../include/hamming_decoder.h"
+#include "../include/hamming_encoder.h"
 
 Factory::Factory(TypeOfUserInterface ui_type_param) {
     encoders_count = 0;

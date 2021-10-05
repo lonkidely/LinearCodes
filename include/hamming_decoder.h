@@ -2,7 +2,6 @@
 #define LINEARCODES_HAMMING_DECODER_H
 
 #include "decoder.h"
-#include "utils.h"
 
 class HammingDecoder : public Decoder {
 public:

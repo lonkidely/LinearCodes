@@ -1,6 +1,5 @@
 #include "../include/hamming_decoder.h"
-#include <iostream>
-#include <algorithm>
+#include "../include/utils.h"
 
 TypeOfCode HammingDecoder::GetType() {
     return kHamming;

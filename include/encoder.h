@@ -1,7 +1,6 @@
 #ifndef LINEARCODES_ENCODER_H
 #define LINEARCODES_ENCODER_H
 
-#include <string>
 #include "code.h"
 
 

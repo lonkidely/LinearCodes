@@ -1,4 +1,5 @@
 #include "../include/code.h"
+#include <algorithm>
 
 Code::Code() {
     code = nullptr;
@@ -37,6 +38,7 @@ std::wstring Code::GetCodeWString() {
     for (int i = 0; i < length; ++i) {
         result += (wchar_t) (code[i] + '0');
     }
+    std::reverse(result.begin(), result.end());
     return result;
 }
 
@@ -66,7 +68,7 @@ bool Code::AreCodesEqual(Code &left, Code &right) {
     if (left.length != right.length)
         return false;
     bool equal = true;
-    for (int i = 0; i < left.length; ++i){
+    for (int i = 0; i < left.length; ++i) {
         if (left.code[i] != right.code[i])
             equal = false;
     }
