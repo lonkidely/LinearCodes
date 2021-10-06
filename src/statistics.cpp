@@ -5,17 +5,7 @@ void Statistics::ApplyErrorCode(Code &code_param, int position) {
     code_param.SetBit(position, code_param.GetBit(position) ^ 1);
 }
 
-int Statistics::CountUnitBits(int number) {
-    int cnt = 0;
-    while (number) {
-        if (number & 1)
-            cnt++;
-        number >>= 1;
-    }
-    return cnt;
-}
-
-int Statistics::GetBits(int number, std::vector<short> &result) {
+int Statistics::GetBits(int number, std::vector<int> &result) {
     int cnt = 0;
     int k = 0;
     while (number) {
@@ -30,16 +20,16 @@ std::vector<Stats> Statistics::GetStats(Code &code, Encoder *encoder, Decoder *d
     Code encoded(code);
     encoder->Encode(encoded);
     int length = encoded.GetLength();
-
     stats.clear();
     stats.resize(length);
+
     int max_number = 0;
     for (int freq = 1; freq <= length; ++freq) {
         max_number += Power(2, freq - 1);
         stats[freq - 1].SummaryCountErrors = CountCombinations(length, freq);
     }
 
-    std::vector<short> bits(length, 0);
+    std::vector<int> bits(length, 0);
     int cnt = 0;
     for (int i = 1; i <= max_number; ++i) {
         std::fill(bits.begin(), bits.end(), 0);
@@ -56,7 +46,7 @@ std::vector<Stats> Statistics::GetStats(Code &code, Encoder *encoder, Decoder *d
         }
 
         stats[cnt - 1].FoundedErrorsCount += error;
-        stats[cnt - 1].FixesCount += (decoded.AreCodesEqual(decoded, code) ? 1 : 0);
+        stats[cnt - 1].FixesCount += (Code::AreCodesEqual(decoded, code) ? 1 : 0);
     }
     for (int freq = 1; freq <= length; ++freq) {
         stats[freq - 1].FindingRate =

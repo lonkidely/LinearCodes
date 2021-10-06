@@ -19,9 +19,7 @@ private:
 
     void ApplyErrorCode(Code &code_param, int position);
 
-    int CountUnitBits(int number);
-
-    int GetBits(int number, std::vector<short> &result);
+    int GetBits(int number, std::vector<int> &result);
 
 public:
     std::vector<Stats> GetStats(Code &code, Encoder *encoder, Decoder *decoder);

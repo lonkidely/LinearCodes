@@ -36,7 +36,7 @@ public:
 
     void SetBit(int position, bool value);
 
-    bool AreCodesEqual(Code &left, Code &right);
+    static bool AreCodesEqual(Code &left, Code &right);
 };
 
 #endif //LINEARCODES_CODE_H

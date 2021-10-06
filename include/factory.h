@@ -5,32 +5,25 @@
 #include "decoder.h"
 #include "ui.h"
 #include "statistics.h"
+#include <vector>
 
 class Controller;
 
 class Factory {
 private:
-    Encoder **encoders;
-    Decoder **decoders;
+    std::vector<Encoder *> encoders;
+    std::vector<Decoder *> decoders;
     Statistics *statistics;
     UI *ui;
 
     TypeOfUserInterface ui_type;
-    int encoders_size;
-    int encoders_count;
-    int decoders_size;
-    int decoders_count;
-
-    void ExpandEncoders();
-
-    void ExpandDecoders();
 
     void AddEncoder(TypeOfCode code_type);
 
     void AddDecoder(TypeOfCode code_type);
 
 public:
-    Factory(TypeOfUserInterface);
+    explicit Factory(TypeOfUserInterface ui_param_type);
 
     UI *GetUserInterface(Controller *controller);
 

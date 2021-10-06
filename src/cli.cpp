@@ -66,8 +66,8 @@ void CLI::Start() {
 
 bool CLI::IsCodeCorrect(std::wstring &message) {
     bool code_is_correct = true;
-    for (size_t i = 0; i < message.length(); ++i) {
-        if ((int) (message[i] - '0') != 0 && (int) (message[i] - '0') != 1)
+    for (wchar_t i : message) {
+        if ((int) (i - '0') != 0 && (int) (i - '0') != 1)
             code_is_correct = false;
     }
     return code_is_correct;
