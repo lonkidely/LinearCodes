@@ -36,10 +36,9 @@ void CLI::Start() {
         PrintMessage(L"Для продолжения выберите один из пунктов ниже:");
         PrintMessage(L"1. Закодировать сообщение");
         PrintMessage(L"2. Раскодировать сообщение");
-        PrintMessage(L"3. Собрать статистику декодирования сообщения");
         PrintMessage(L"0. Выход");
         int choice;
-        if (!GetChoiceResult(0, 3, choice)) {
+        if (!GetChoiceResult(0, 2, choice)) {
             PrintMessage(L"Вы ввели некорректное значение");
             continue;
         }
@@ -50,9 +49,6 @@ void CLI::Start() {
                 break;
             case 2:
                 Decode();
-                break;
-            case 3:
-                GetStatistic();
                 break;
             case 0:
                 work_is_not_ended = false;
@@ -66,7 +62,7 @@ void CLI::Start() {
 
 bool CLI::IsCodeCorrect(std::wstring &message) {
     bool code_is_correct = true;
-    for (wchar_t i : message) {
+    for (wchar_t i: message) {
         if ((int) (i - '0') != 0 && (int) (i - '0') != 1)
             code_is_correct = false;
     }
@@ -172,51 +168,5 @@ void CLI::Decode() {
         PrintMessage(result);
 
         decode_is_not_ended = false;
-    }
-}
-
-void CLI::GetStatistic() {
-    bool stats_is_not_ended = true;
-    while (stats_is_not_ended) {
-        PrintMessage(L"Выберите один из пунктов ниже:");
-        PrintMessage(L"1. Код Хэмминга");
-        PrintMessage(L"2. Циклический код");
-        PrintMessage(L"0. Назад");
-
-        int command;
-        if (!GetChoiceResult(0, 2, command)) {
-            PrintMessage(L"Вы ввели некорректное значение");
-            continue;
-        }
-
-        if (command == 0)
-            return;
-
-        TypeOfCode code_type;
-        switch (command) {
-            case 1:
-                code_type = kHamming;
-                break;
-            default:
-                code_type = kCycleCode;
-                break;
-        }
-
-        std::wstring code_string = ReadCodeString();
-        if (code_string.length() > kMaxLengthCodeForStats) {
-            PrintMessage(L"Вы ввели слишком длинную последовательность");
-            continue;
-        }
-        Code code_for_stats = GetCodeFromString(code_string, code_type);
-
-        std::vector<Stats> stats = controller->GetStats(code_for_stats);
-        controller->EncodeMessage(code_for_stats);
-        for (int i = 0; i < code_for_stats.GetLength(); ++i) {
-            std::wcout << "i = " << i + 1 << " " << stats[i].SummaryCountErrors << " "
-                       << stats[i].FoundedErrorsCount << " "
-                       << stats[i].FixesCount << " " << stats[i].FindingRate << " " << stats[i].FixingRate << "\n";
-        }
-
-        stats_is_not_ended = false;
     }
 }

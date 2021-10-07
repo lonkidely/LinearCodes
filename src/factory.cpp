@@ -7,7 +7,6 @@ Factory::Factory(TypeOfUserInterface ui_type_param) {
     encoders = std::vector<Encoder *>();
     decoders = std::vector<Decoder *>();
     ui_type = ui_type_param;
-    statistics = nullptr;
     ui = nullptr;
 }
 
@@ -65,11 +64,4 @@ Decoder *Factory::GetDecoder(TypeOfCode code_type) {
     }
     AddDecoder(code_type);
     return decoders.back();
-}
-
-Statistics *Factory::GetStatistics() {
-    if (statistics == nullptr) {
-        statistics = new Statistics();
-    }
-    return statistics;
 }

@@ -8,7 +8,6 @@ class Controller;
 
 class CLI : public UI {
 private:
-    static const int kMaxLengthCodeForStats = 11;
 
     Controller *controller;
 
@@ -25,9 +24,6 @@ private:
     void Encode();
 
     void Decode();
-
-    void GetStatistic();
-
 
 public:
 

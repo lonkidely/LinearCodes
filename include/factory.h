@@ -4,7 +4,6 @@
 #include "encoder.h"
 #include "decoder.h"
 #include "ui.h"
-#include "statistics.h"
 #include <vector>
 
 class Controller;
@@ -13,7 +12,6 @@ class Factory {
 private:
     std::vector<Encoder *> encoders;
     std::vector<Decoder *> decoders;
-    Statistics *statistics;
     UI *ui;
 
     TypeOfUserInterface ui_type;
@@ -30,8 +28,6 @@ public:
     Encoder *GetEncoder(TypeOfCode code_type);
 
     Decoder *GetDecoder(TypeOfCode code_type);
-
-    Statistics *GetStatistics();
 };
 
 #endif //LINEARCODES_FACTORY_H

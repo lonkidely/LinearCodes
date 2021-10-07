@@ -14,8 +14,6 @@ public:
     void EncodeMessage(Code &code_param);
 
     int DecodeMessage(Code &code_param);
-
-    std::vector<Stats> GetStats(Code &code_param);
 };
 
 #endif //LINEARCODES_CONTROLLER_H

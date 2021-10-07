@@ -31,23 +31,6 @@ int Power(int num, int degree) {
     return tmp * tmp;
 }
 
-int Factorial(int n) {
-    int result = 1;
-    for (int i = 2; i <= n; ++i) {
-        result *= i;
-    }
-    return result;
-}
-
-int CountCombinations(int n, int k) {
-    if (k == 1) return n;
-    int result = 1;
-    for (int i = std::max(n - k, k) + 1; i <= n; ++i)
-        result *= i;
-    result /= Factorial(std::min(n - k, k));
-    return result;
-}
-
 bool IsCorrectNumber(std::wstring &str) {
     bool is_correct = true;
     for (wchar_t i: str) {
