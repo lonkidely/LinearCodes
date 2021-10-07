@@ -1,19 +1,19 @@
 #include "../include/statistics.h"
 #include "../include/utils.h"
+#include <numeric>
 
 void Statistics::ApplyErrorCode(Code &code_param, int position) {
     code_param.SetBit(position, code_param.GetBit(position) ^ 1);
 }
 
-int Statistics::GetBits(int number, std::vector<int> &result) {
-    int cnt = 0;
-    int k = 0;
-    while (number) {
-        result[k++] = number % 2;
-        cnt += (number % 2);
-        number /= 2;
+//new result = old_result + 1 in binary code
+int Statistics::GetBits(std::vector<int> &result) {
+    int k = 1;
+    for (size_t i = 0; i < result.size() && k; ++i) {
+        result[i] = result[i] ^ k;
+        k = result[i] ^ k;
     }
-    return cnt;
+    return std::accumulate(result.begin(), result.end(), 0);
 }
 
 std::vector<Stats> Statistics::GetStats(Code &code, Encoder *encoder, Decoder *decoder) {
@@ -32,8 +32,7 @@ std::vector<Stats> Statistics::GetStats(Code &code, Encoder *encoder, Decoder *d
     std::vector<int> bits(length, 0);
     int cnt = 0;
     for (int i = 1; i <= max_number; ++i) {
-        std::fill(bits.begin(), bits.end(), 0);
-        cnt = GetBits(i, bits);
+        cnt = GetBits(bits);
         for (int j = 0; j < length; ++j) {
             if (bits[j])
                 ApplyErrorCode(encoded, j);
