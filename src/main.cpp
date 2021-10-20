@@ -1,13 +1,11 @@
 #include <iostream>
-#include <io.h>
-#include <fcntl.h>
+#include <locale>
 
 #include "../include/controller.h"
 
 int main() {
-    _setmode(_fileno(stdout), _O_U16TEXT);
-    _setmode(_fileno(stdin), _O_U16TEXT);
-    _setmode(_fileno(stderr), _O_U16TEXT);
+
+    setlocale(LC_ALL, "ru_RU.UTF8");
 
     Factory *factory = new Factory(kCLI);
     Controller controller(factory);

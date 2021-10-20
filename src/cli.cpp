@@ -15,7 +15,6 @@ void CLI::PrintMessage(std::wstring message) {
 std::wstring CLI::ReadMessage() {
     std::wstring input_message;
     std::getline(std::wcin, input_message, (wchar_t) '\n');
-    std::wcin.get();
     return input_message;
 }
 
