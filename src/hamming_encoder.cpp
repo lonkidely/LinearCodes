@@ -5,33 +5,28 @@ TypeOfCode HammingEncoder::GetType() {
     return TypeOfCode::kHamming;
 }
 
-void HammingEncoder::Encode(Code &code) {
-    int add = static_cast<int>(CountPowerOfTwo(code.GetLength()));
-    if (Power(2, add) <= static_cast<int>(code.GetLength()) + add) add++;
+CodeBlock HammingEncoder::EncodeCodeBlock(const CodeBlock &code_block_param) {
+    CodeBlock result_block{};
+    result_block.size = block_size;
+    result_block.code = new bool[block_size];
 
-    size_t new_length = code.GetLength() + add;
+    result_block.code[2] = code_block_param.code[0];
+    result_block.code[4] = code_block_param.code[1];
+    result_block.code[5] = code_block_param.code[2];
+    result_block.code[6] = code_block_param.code[3];
+    result_block.code[0] = result_block.code[2] ^ result_block.code[4] ^ result_block.code[6];
+    result_block.code[1] = result_block.code[2] ^ result_block.code[5] ^ result_block.code[6];
+    result_block.code[3] = result_block.code[4] ^ result_block.code[5] ^ result_block.code[6];
 
-    bool *old_code = code.GetCode();
-    bool *new_code = new bool[new_length];
-    for (size_t i = 1, j = 0; i <= new_length; ++i) {
-        new_code[i - 1] = false;
-        if (!IsItPowerOfTwo(i))
-            new_code[i - 1] = old_code[j++];
+    return result_block;
+}
+
+Code HammingEncoder::Encode(const Code &code) {
+    size_t count_blocks = code.GetBlocksCount();
+    auto *result_blocks = new CodeBlock[count_blocks];
+    for (size_t i = 0; i < count_blocks; ++i) {
+        result_blocks[i] = EncodeCodeBlock(code.GetCodeBlock(i));
     }
-
-    for (size_t i = 1; i <= new_length; ++i) {
-        if (IsItPowerOfTwo(i)) {
-            size_t j = i - 1;
-            while (j <= new_length) {
-                for (size_t k = j; k < j + i && k < new_length; ++k) {
-                    new_code[i - 1] = new_code[i - 1] ^ new_code[k];
-                }
-
-                j += 2 * i;
-            }
-        }
-    }
-    code.SetCode(new_code);
-    code.SetLength(new_length);
-    delete[] old_code;
+    Code result(result_blocks, count_blocks, code.GetCodeType());
+    return result;
 }

@@ -68,9 +68,9 @@ bool CLI::IsCodeCorrect(std::wstring &message) {
     return code_is_correct;
 }
 
-Code CLI::GetCodeFromString(std::wstring &message, TypeOfCode &code_type) {
+Code CLI::GetCodeFromString(std::wstring &message, TypeOfCode &code_type, size_t code_block_size) {
     std::reverse(message.begin(), message.end());
-    return {message, code_type};
+    return {message, code_type, code_block_size};
 }
 
 std::wstring CLI::ReadCodeString() {
@@ -88,9 +88,9 @@ std::wstring CLI::ReadCodeString() {
     return message;
 }
 
-Code CLI::ReadCode(TypeOfCode &code_type) {
+Code CLI::ReadCode(TypeOfCode &code_type, size_t code_block_size) {
     std::wstring code = ReadCodeString();
-    return GetCodeFromString(code, code_type);
+    return GetCodeFromString(code, code_type, code_block_size);
 }
 
 void CLI::Encode() {
@@ -115,11 +115,11 @@ void CLI::Encode() {
         else
             code_type = TypeOfCode::kCycleCode;
 
-        Code code_to_encode = ReadCode(code_type);
-        controller->EncodeMessage(code_to_encode);
+        Code code_to_encode = ReadCode(code_type, 4);
+        Code result_of_encoding = controller->EncodeMessage(code_to_encode);
 
         PrintMessage(L"В закодированном виде:");
-        std::wstring result = code_to_encode.GetCodeWString();
+        std::wstring result = result_of_encoding.GetCodeWString();
         PrintMessage(result);
 
         encode_is_not_ended = false;
@@ -149,15 +149,15 @@ void CLI::Decode() {
         else
             code_type = TypeOfCode::kCycleCode;
 
-        Code code_to_decode = ReadCode(code_type);
-        int error_have_been_found = controller->DecodeMessage(code_to_decode);
-        if (error_have_been_found) {
+        Code code_to_decode = ReadCode(code_type, 7);
+
+        std::pair<Code, bool> result_of_decoding = controller->DecodeMessage(code_to_decode);
+        if (result_of_decoding.second) {
             PrintMessage(L"В коде была обнаружена ошибка");
-            PrintMessage(L"Ошибка в " + std::to_wstring(error_have_been_found) + L" бите справа");
         }
 
         PrintMessage(L"В раскодированном виде:");
-        std::wstring result = code_to_decode.GetCodeWString();
+        std::wstring result = result_of_decoding.first.GetCodeWString();
         PrintMessage(result);
 
         decode_is_not_ended = false;

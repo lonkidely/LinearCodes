@@ -3,12 +3,6 @@
 
 #include <string>
 
-bool IsItPowerOfTwo(unsigned int number);
-
-unsigned int CountPowerOfTwo(unsigned int number);
-
-int Power(int num, int degree);
-
-bool IsCorrectNumber(std::wstring &str);
+bool IsCorrectNumber(const std::wstring &str);
 
 #endif //LINEARCODES_UTILS_H

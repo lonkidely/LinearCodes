@@ -5,42 +5,50 @@ TypeOfCode HammingDecoder::GetType() {
     return TypeOfCode::kHamming;
 }
 
-int HammingDecoder::Decode(Code &code) {
-    size_t length = code.GetLength();
-    size_t new_length = length - CountPowerOfTwo(length);
+std::pair<CodeBlock, bool> HammingDecoder::DecodeCodeBlock(const CodeBlock &code_block_param) {
+    CodeBlock result_block{};
+    result_block.size = block_size;
+    result_block.code = new bool[block_size];
 
-    bool *input_code = code.GetCode();
-    bool *help_code = new bool[new_length];
+    bool h1 = code_block_param.code[0] ^ code_block_param.code[2] ^ code_block_param.code[4] ^ code_block_param.code[6];
+    bool h2 = code_block_param.code[1] ^ code_block_param.code[2] ^ code_block_param.code[5] ^ code_block_param.code[6];
+    bool h3 = code_block_param.code[3] ^ code_block_param.code[4] ^ code_block_param.code[5] ^ code_block_param.code[6];
 
-    int index = 0, step = 0;
+    int index = h1 + 2 * h2 + 4 * h3;
 
-    for (size_t i = 1; i <= length; ++i) {
-        if (IsItPowerOfTwo(i)) {
-            bool control_bit = false;
-            size_t j = i - 1;
-            while (j <= length) {
-                for (size_t k = j; k < j + i && k < length; ++k) {
-                    control_bit ^= input_code[k];
-                }
+    result_block.code[0] = code_block_param.code[2];
+    result_block.code[1] = code_block_param.code[4];
+    result_block.code[2] = code_block_param.code[5];
+    result_block.code[3] = code_block_param.code[6];
 
-                j += 2 * i;
-            }
-            index += Power(2, step) * control_bit;
-            step++;
-        }
+    switch (index) {
+        case 3:
+            result_block.code[0] ^= 1;
+            break;
+        case 5:
+            result_block.code[1] ^= 1;
+            break;
+        case 6:
+            result_block.code[2] ^= 1;
+            break;
+        case 7:
+            result_block.code[3] ^= 1;
+            break;
+        default:
+            break;
     }
 
-    if (index != 0)
-        input_code[index - 1] ^= 1;
+    return std::make_pair(result_block, index != 0);
+}
 
-    for (size_t i = 1, p = 0; i <= length; ++i) {
-        if (!IsItPowerOfTwo(i)) {
-            help_code[p++] = input_code[i - 1];
-        }
+std::pair<Code, bool> HammingDecoder::Decode(const Code &code) {
+    size_t count_blocks = code.GetBlocksCount();
+    auto *result_blocks = new CodeBlock[count_blocks];
+    bool errors_have_been_found = false;
+    for (size_t i = 0; i < count_blocks; ++i) {
+        std::pair<CodeBlock, int> res = DecodeCodeBlock(code.GetCodeBlock(i));
+        result_blocks[i] = res.first;
+        errors_have_been_found |= res.second;
     }
-
-    delete[] input_code;
-    code.SetCode(help_code);
-    code.SetLength(new_length);
-    return index;
+    return std::make_pair(Code(result_blocks, count_blocks, code.GetCodeType()), errors_have_been_found);
 }

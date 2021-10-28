@@ -8,28 +8,31 @@ enum class TypeOfCode : int {
     kCycleCode
 };
 
+struct CodeBlock {
+    bool *code;
+    size_t size;
+};
+
 class Code {
 private:
-    bool *code;
-    size_t length;
+    CodeBlock *code_blocks;
+    size_t blocks_count;
     TypeOfCode code_type;
 public:
 
-    Code(std::wstring code_param, TypeOfCode code_type_param);
+    Code(std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size);
 
-    Code(Code &code_param);
+    Code(CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param);
 
-    TypeOfCode GetCodeType();
+    Code(const Code &code_param);
 
-    size_t GetLength() const;
+    TypeOfCode GetCodeType() const;
 
-    void SetLength(size_t length_param);
+    size_t GetBlocksCount() const;
 
-    bool *GetCode();
+    CodeBlock &GetCodeBlock(size_t index) const;
 
-    std::wstring GetCodeWString();
-
-    void SetCode(bool *code_param);
+    std::wstring GetCodeWString() const;
 };
 
 #endif //LINEARCODES_CODE_H

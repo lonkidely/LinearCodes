@@ -1,51 +1,75 @@
 #include "../include/code.h"
 #include <algorithm>
 
+Code::Code(std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size) {
+    size_t length = code_param.length();
+    blocks_count = (length + code_block_size - 1) / code_block_size;
+    code_blocks = new CodeBlock[blocks_count];
 
-Code::Code(std::wstring code_param, TypeOfCode code_type_param) {
-    length = code_param.length();
-    code = new bool[length];
-    for (size_t i = 0; i < length; ++i) {
-        code[i] = (int) code_param[i] - '0';
+    size_t index = 0;
+    for (size_t i = 0; i < blocks_count; ++i) {
+        code_blocks[i].code = new bool[code_block_size];
+        code_blocks[i].size = code_block_size;
+
+        std::fill(code_blocks[i].code, code_blocks[i].code + code_block_size, false);
+
+        for (size_t j = 0; j < std::min(code_block_size, length - index + j); ++j)
+            code_blocks[i].code[j] = static_cast<bool>(code_param[index++] - '0');
     }
     code_type = code_type_param;
 }
 
-Code::Code(Code &code_param) {
-    length = code_param.GetLength();
-    code_type = code_param.GetCodeType();
-    bool *temp_code = code_param.GetCode();
-    code = new bool[length];
-    for (size_t i = 0; i < length; ++i) {
-        code[i] = temp_code[i];
+Code::Code(CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param) {
+    blocks_count = blocks_count_param;
+    code_blocks = new CodeBlock[blocks_count];
+
+    for (size_t i = 0; i < blocks_count; ++i) {
+        code_blocks[i].size = blocks_param[i].size;
+        code_blocks[i].code = new bool[code_blocks[i].size];
+
+        for (size_t j = 0; j < code_blocks[i].size; ++j) {
+            code_blocks[i].code[j] = blocks_param[i].code[j];
+        }
     }
+
+    code_type = code_type_param;
 }
 
-TypeOfCode Code::GetCodeType() {
+Code::Code(const Code &code_param) {
+    blocks_count = code_param.blocks_count;
+    code_blocks = new CodeBlock[blocks_count];
+
+    for (size_t i = 0; i < blocks_count; ++i) {
+        code_blocks[i].size = code_param.code_blocks[i].size;
+        code_blocks[i].code = new bool[code_blocks[i].size];
+
+        for (size_t j = 0; j < code_blocks[i].size; ++j) {
+            code_blocks[i].code[j] = code_param.code_blocks[i].code[j];
+        }
+    }
+
+    code_type = code_param.code_type;
+}
+
+TypeOfCode Code::GetCodeType() const {
     return code_type;
 }
 
-bool *Code::GetCode() {
-    return code;
-}
-
-std::wstring Code::GetCodeWString() {
+std::wstring Code::GetCodeWString() const {
     std::wstring result;
-    for (size_t i = 0; i < length; ++i) {
-        result += (wchar_t) (code[i] + '0');
+    for (size_t i = 0; i < blocks_count; ++i) {
+        for (size_t j = 0; j < code_blocks[i].size; ++j) {
+            result += (wchar_t) (code_blocks[i].code[j] + '0');
+        }
     }
     std::reverse(result.begin(), result.end());
     return result;
 }
 
-size_t Code::GetLength() const {
-    return length;
+size_t Code::GetBlocksCount() const {
+    return blocks_count;
 }
 
-void Code::SetLength(size_t length_param) {
-    length = length_param;
-}
-
-void Code::SetCode(bool *code_param) {
-    code = code_param;
+CodeBlock &Code::GetCodeBlock(size_t index) const {
+    return code_blocks[index];
 }

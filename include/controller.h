@@ -11,9 +11,9 @@ public:
 
     void Work();
 
-    void EncodeMessage(Code &code_param);
+    Code EncodeMessage(Code &code_param);
 
-    int DecodeMessage(Code &code_param);
+    std::pair<Code, bool> DecodeMessage(Code &code_param);
 };
 
 #endif //LINEARCODES_CONTROLLER_H

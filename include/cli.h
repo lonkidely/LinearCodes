@@ -17,9 +17,9 @@ private:
 
     std::wstring ReadCodeString();
 
-    static Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type);
+    static Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type, size_t code_block_size);
 
-    Code ReadCode(TypeOfCode &code_type);
+    Code ReadCode(TypeOfCode &code_type, size_t code_block_size);
 
     void Encode();
 

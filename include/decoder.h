@@ -8,7 +8,7 @@ class Decoder {
 public:
     virtual TypeOfCode GetType() = 0;
 
-    virtual int Decode(Code &) = 0;
+    virtual std::pair<Code, bool> Decode(const Code &) = 0;
 
     virtual ~Decoder() = default;
 };
