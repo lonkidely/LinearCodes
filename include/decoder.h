@@ -10,7 +10,7 @@ public:
 
     virtual int Decode(Code &) = 0;
 
-    virtual ~Decoder() {}
+    virtual ~Decoder() = default;
 };
 
 #endif //LINEARCODES_DECODER_H

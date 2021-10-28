@@ -2,28 +2,28 @@
 #include "../include/utils.h"
 
 TypeOfCode HammingEncoder::GetType() {
-    return kHamming;
+    return TypeOfCode::kHamming;
 }
 
 void HammingEncoder::Encode(Code &code) {
-    int add = CountPowerOfTwo(code.GetLength());
-    if (Power(2, add) <= code.GetLength() + add) add++;
+    int add = static_cast<int>(CountPowerOfTwo(code.GetLength()));
+    if (Power(2, add) <= static_cast<int>(code.GetLength()) + add) add++;
 
-    int new_length = code.GetLength() + add;
+    size_t new_length = code.GetLength() + add;
 
     bool *old_code = code.GetCode();
     bool *new_code = new bool[new_length];
-    for (int i = 1, j = 0; i <= new_length; ++i) {
-        new_code[i - 1] = 0;
+    for (size_t i = 1, j = 0; i <= new_length; ++i) {
+        new_code[i - 1] = false;
         if (!IsItPowerOfTwo(i))
             new_code[i - 1] = old_code[j++];
     }
 
-    for (int i = 1; i <= new_length; ++i) {
+    for (size_t i = 1; i <= new_length; ++i) {
         if (IsItPowerOfTwo(i)) {
-            int j = i - 1;
+            size_t j = i - 1;
             while (j <= new_length) {
-                for (int k = j; k < j + i && k < new_length; ++k) {
+                for (size_t k = j; k < j + i && k < new_length; ++k) {
                     new_code[i - 1] = new_code[i - 1] ^ new_code[k];
                 }
 

@@ -10,7 +10,7 @@ public:
 
     virtual void Encode(Code &) = 0;
 
-    virtual ~Encoder() {}
+    virtual ~Encoder() = default;
 };
 
 #endif //LINEARCODES_ENCODER_H

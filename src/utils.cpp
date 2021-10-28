@@ -1,7 +1,7 @@
 #include "../include/utils.h"
 #include <algorithm>
 
-bool IsItPowerOfTwo(int number) {
+bool IsItPowerOfTwo(unsigned int number) {
     int count_bits = 0;
     while (number) {
         if (number & 1) count_bits++;
@@ -10,8 +10,8 @@ bool IsItPowerOfTwo(int number) {
     return count_bits == 1;
 }
 
-int CountPowerOfTwo(int number) {
-    int i = 1;
+unsigned int CountPowerOfTwo(unsigned int number) {
+    unsigned int i = 1;
     int step = 1;
     while (i * 2 <= number) {
         i *= 2;

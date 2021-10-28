@@ -2,24 +2,24 @@
 #include "../include/utils.h"
 
 TypeOfCode HammingDecoder::GetType() {
-    return kHamming;
+    return TypeOfCode::kHamming;
 }
 
 int HammingDecoder::Decode(Code &code) {
-    int length = code.GetLength();
-    int new_length = length - CountPowerOfTwo(length);
+    size_t length = code.GetLength();
+    size_t new_length = length - CountPowerOfTwo(length);
 
     bool *input_code = code.GetCode();
     bool *help_code = new bool[new_length];
 
     int index = 0, step = 0;
 
-    for (int i = 1; i <= length; ++i) {
+    for (size_t i = 1; i <= length; ++i) {
         if (IsItPowerOfTwo(i)) {
             bool control_bit = false;
-            int j = i - 1;
+            size_t j = i - 1;
             while (j <= length) {
-                for (int k = j; k < j + i && k < length; ++k) {
+                for (size_t k = j; k < j + i && k < length; ++k) {
                     control_bit ^= input_code[k];
                 }
 
@@ -33,7 +33,7 @@ int HammingDecoder::Decode(Code &code) {
     if (index != 0)
         input_code[index - 1] ^= 1;
 
-    for (int i = 1, p = 0; i <= length; ++i) {
+    for (size_t i = 1, p = 0; i <= length; ++i) {
         if (!IsItPowerOfTwo(i)) {
             help_code[p++] = input_code[i - 1];
         }
@@ -42,5 +42,5 @@ int HammingDecoder::Decode(Code &code) {
     delete[] input_code;
     code.SetCode(help_code);
     code.SetLength(new_length);
-    return index != 0;
+    return index;
 }

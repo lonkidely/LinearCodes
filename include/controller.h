@@ -7,7 +7,7 @@ class Controller {
 private:
     Factory *factory;
 public:
-    Controller(Factory *factory_param);
+    explicit Controller(Factory *factory_param);
 
     void Work();
 

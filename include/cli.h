@@ -13,11 +13,11 @@ private:
 
     bool GetChoiceResult(int lower_bound, int upper_bound, int &choice);
 
-    bool IsCodeCorrect(std::wstring &message);
+    static bool IsCodeCorrect(std::wstring &message);
 
     std::wstring ReadCodeString();
 
-    Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type);
+    static Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type);
 
     Code ReadCode(TypeOfCode &code_type);
 
@@ -27,7 +27,7 @@ private:
 
 public:
 
-    CLI(Controller *controller_param);
+    explicit CLI(Controller *controller_param);
 
     void PrintMessage(std::wstring message) override;
 

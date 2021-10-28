@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum TypeOfCode : int {
+enum class TypeOfCode : int {
     kHamming,
     kCycleCode
 };
@@ -11,10 +11,9 @@ enum TypeOfCode : int {
 class Code {
 private:
     bool *code;
-    int length;
+    size_t length;
     TypeOfCode code_type;
 public:
-    Code();
 
     Code(std::wstring code_param, TypeOfCode code_type_param);
 
@@ -22,21 +21,15 @@ public:
 
     TypeOfCode GetCodeType();
 
-    int GetLength();
+    size_t GetLength() const;
 
-    void SetLength(int length_param);
+    void SetLength(size_t length_param);
 
     bool *GetCode();
 
     std::wstring GetCodeWString();
 
     void SetCode(bool *code_param);
-
-    int GetBit(int position);
-
-    void SetBit(int position, bool value);
-
-    static bool AreCodesEqual(Code &left, Code &right);
 };
 
 #endif //LINEARCODES_CODE_H

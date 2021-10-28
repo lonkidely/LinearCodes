@@ -3,15 +3,11 @@
 
 #include <string>
 
-bool IsItPowerOfTwo(int number);
+bool IsItPowerOfTwo(unsigned int number);
 
-int CountPowerOfTwo(int number);
+unsigned int CountPowerOfTwo(unsigned int number);
 
 int Power(int num, int degree);
-
-int Factorial(int n);
-
-int CountCombinations(int n, int k);
 
 bool IsCorrectNumber(std::wstring &str);
 

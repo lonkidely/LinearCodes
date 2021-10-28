@@ -26,7 +26,7 @@ UI *Factory::GetUserInterface(Controller *controller) {
 
 void Factory::AddEncoder(TypeOfCode code_type) {
     switch (code_type) {
-        case kHamming:
+        case TypeOfCode::kHamming:
             encoders.push_back(new HammingEncoder());
             break;
         default:
@@ -47,7 +47,7 @@ Encoder *Factory::GetEncoder(TypeOfCode code_type) {
 
 void Factory::AddDecoder(TypeOfCode code_type) {
     switch (code_type) {
-        case kHamming:
+        case TypeOfCode::kHamming:
             decoders.push_back(new HammingDecoder());
             break;
         default:

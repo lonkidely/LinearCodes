@@ -16,7 +16,7 @@ public:
 
     virtual void Start() = 0;
 
-    virtual ~UI() {}
+    virtual ~UI() = default;
 };
 
 #endif //LINEARCODES_UI_H
