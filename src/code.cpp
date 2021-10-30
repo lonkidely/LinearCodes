@@ -59,7 +59,7 @@ std::wstring Code::GetCodeWString() const {
     std::wstring result;
     for (size_t i = 0; i < blocks_count; ++i) {
         for (size_t j = 0; j < code_blocks[i].size; ++j) {
-            result += (wchar_t) (code_blocks[i].code[j] + '0');
+            result += static_cast<wchar_t>(code_blocks[i].code[j] + '0');
         }
     }
     std::reverse(result.begin(), result.end());

@@ -13,7 +13,6 @@ Factory::Factory(TypeOfUserInterface ui_type_param) {
     ui = nullptr;
 }
 
-
 UI *Factory::GetUserInterface(Controller *controller) {
     if (ui_type == kCLI) {
         if (ui == nullptr) {
