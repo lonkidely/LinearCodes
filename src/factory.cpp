@@ -2,6 +2,9 @@
 #include "../include/cli.h"
 #include "../include/hamming_decoder.h"
 #include "../include/hamming_encoder.h"
+#include "../include/cyclic_decoder.h"
+#include "../include/cyclic_encoder.h"
+
 
 Factory::Factory(TypeOfUserInterface ui_type_param) {
     encoders = std::vector<Encoder *>();
@@ -12,26 +15,23 @@ Factory::Factory(TypeOfUserInterface ui_type_param) {
 
 
 UI *Factory::GetUserInterface(Controller *controller) {
-    switch (ui_type) {
-        case kCLI:
-            if (ui == nullptr)
-                ui = new CLI(controller);
-            break;
-        default:
-
-            break;
+    if (ui_type == kCLI) {
+        if (ui == nullptr) {
+            ui = new CLI(controller);
+        }
+    } else {
+        if (ui == nullptr) {
+            //ui = new GUI(controller);
+        }
     }
     return ui;
 }
 
 void Factory::AddEncoder(TypeOfCode code_type) {
-    switch (code_type) {
-        case TypeOfCode::kHamming:
-            encoders.push_back(new HammingEncoder());
-            break;
-        default:
-
-            break;
+    if (code_type == TypeOfCode::kHamming) {
+        encoders.push_back(new HammingEncoder());
+    } else {
+        encoders.push_back(new CyclicEncoder());
     }
 }
 
@@ -46,13 +46,10 @@ Encoder *Factory::GetEncoder(TypeOfCode code_type) {
 }
 
 void Factory::AddDecoder(TypeOfCode code_type) {
-    switch (code_type) {
-        case TypeOfCode::kHamming:
-            decoders.push_back(new HammingDecoder());
-            break;
-        default:
-
-            break;
+    if (code_type == TypeOfCode::kHamming) {
+        decoders.push_back(new HammingDecoder());
+    } else {
+        decoders.push_back(new CyclicDecoder());
     }
 }
 

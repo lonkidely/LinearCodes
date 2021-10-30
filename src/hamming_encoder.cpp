@@ -1,5 +1,4 @@
 #include "../include/hamming_encoder.h"
-#include "../include/utils.h"
 
 TypeOfCode HammingEncoder::GetType() {
     return TypeOfCode::kHamming;

@@ -1,5 +1,4 @@
 #include "../include/hamming_decoder.h"
-#include "../include/utils.h"
 
 TypeOfCode HammingDecoder::GetType() {
     return TypeOfCode::kHamming;
@@ -46,7 +45,7 @@ std::pair<Code, bool> HammingDecoder::Decode(const Code &code) {
     auto *result_blocks = new CodeBlock[count_blocks];
     bool errors_have_been_found = false;
     for (size_t i = 0; i < count_blocks; ++i) {
-        std::pair<CodeBlock, int> res = DecodeCodeBlock(code.GetCodeBlock(i));
+        std::pair<CodeBlock, bool> res = DecodeCodeBlock(code.GetCodeBlock(i));
         result_blocks[i] = res.first;
         errors_have_been_found |= res.second;
     }
