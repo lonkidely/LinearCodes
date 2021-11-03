@@ -1,11 +1,11 @@
 #include "../include/controller.h"
 
-Controller::Controller(Factory *factory_param) {
-    factory = factory_param;
+Controller::Controller(std::shared_ptr<Factory> factory_param) {
+    factory = std::move(factory_param);
 }
 
 void Controller::Work() {
-    factory->GetUserInterface(this)->Start();
+    factory->GetUserInterface(std::make_shared<Controller>(*this))->Start();
 }
 
 Code Controller::EncodeMessage(Code &code_param) {

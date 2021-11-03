@@ -1,4 +1,6 @@
 #include "../include/factory.h"
+
+#include <utility>
 #include "../include/cli.h"
 #include "../include/hamming_decoder.h"
 #include "../include/hamming_encoder.h"
@@ -7,38 +9,37 @@
 
 
 Factory::Factory(TypeOfUserInterface ui_type_param) {
-    encoders = std::vector<Encoder *>();
-    decoders = std::vector<Decoder *>();
+    encoders = std::vector<std::shared_ptr<Encoder>>();
+    decoders = std::vector<std::shared_ptr<Decoder>>();
     ui_type = ui_type_param;
     ui = nullptr;
 }
 
-UI *Factory::GetUserInterface(Controller *controller) {
+std::shared_ptr<UI> Factory::GetUserInterface(std::shared_ptr<Controller> controller) {
     if (ui_type == kCLI) {
         if (ui == nullptr) {
-            ui = new CLI(controller);
+            ui = std::make_unique<CLI>(CLI(std::move(controller)));
         }
     } else {
         if (ui == nullptr) {
             //ui = new GUI(controller);
         }
     }
-    return ui;
+    return std::move(ui);
 }
 
 void Factory::AddEncoder(TypeOfCode code_type) {
     if (code_type == TypeOfCode::kHamming) {
-        encoders.push_back(new HammingEncoder());
+        encoders.push_back(std::make_shared<HammingEncoder>());
     } else {
-        encoders.push_back(new CyclicEncoder());
+        encoders.push_back(std::make_shared<CyclicEncoder>());
     }
 }
 
-Encoder *Factory::GetEncoder(TypeOfCode code_type) {
-    auto iter = encoders.begin();
-    while (iter != encoders.end()) {
-        if ((*iter)->GetType() == code_type)
-            return *iter;
+std::shared_ptr<Encoder> Factory::GetEncoder(TypeOfCode code_type) {
+    for (auto &encoder: encoders) {
+        if (encoder->GetType() == code_type)
+            return encoder;
     }
     AddEncoder(code_type);
     return encoders.back();
@@ -46,17 +47,16 @@ Encoder *Factory::GetEncoder(TypeOfCode code_type) {
 
 void Factory::AddDecoder(TypeOfCode code_type) {
     if (code_type == TypeOfCode::kHamming) {
-        decoders.push_back(new HammingDecoder());
+        decoders.push_back(std::make_shared<HammingDecoder>());
     } else {
-        decoders.push_back(new CyclicDecoder());
+        decoders.push_back(std::make_shared<CyclicDecoder>());
     }
 }
 
-Decoder *Factory::GetDecoder(TypeOfCode code_type) {
-    auto iter = decoders.begin();
-    while (iter != decoders.end()) {
-        if ((*iter)->GetType() == code_type)
-            return *iter;
+std::shared_ptr<Decoder> Factory::GetDecoder(TypeOfCode code_type) {
+    for (auto &decoder: decoders) {
+        if (decoder->GetType() == code_type)
+            return decoder;
     }
     AddDecoder(code_type);
     return decoders.back();

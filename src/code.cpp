@@ -1,7 +1,7 @@
 #include "../include/code.h"
 #include <algorithm>
 
-Code::Code(std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size) {
+Code::Code(const std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size) {
     size_t length = code_param.length();
     blocks_count = (length + code_block_size - 1) / code_block_size;
     code_blocks = new CodeBlock[blocks_count];
@@ -19,7 +19,7 @@ Code::Code(std::wstring &code_param, TypeOfCode code_type_param, size_t code_blo
     code_type = code_type_param;
 }
 
-Code::Code(CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param) {
+Code::Code(const CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param) {
     blocks_count = blocks_count_param;
     code_blocks = new CodeBlock[blocks_count];
 

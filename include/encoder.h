@@ -8,7 +8,7 @@ class Encoder {
 public:
     virtual TypeOfCode GetType() = 0;
 
-    virtual Code Encode(const Code &) = 0;
+    virtual Code Encode(const Code &code_param) = 0;
 
     virtual ~Encoder() = default;
 };

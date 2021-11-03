@@ -20,9 +20,9 @@ private:
     TypeOfCode code_type;
 public:
 
-    Code(std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size);
+    Code(const std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size);
 
-    Code(CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param);
+    Code(const CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param);
 
     Code(const Code &code_param);
 

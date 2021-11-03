@@ -5,9 +5,9 @@
 
 class Controller {
 private:
-    Factory *factory;
+    std::shared_ptr<Factory> factory;
 public:
-    explicit Controller(Factory *factory_param);
+    explicit Controller(std::shared_ptr<Factory> factory_param);
 
     void Work();
 

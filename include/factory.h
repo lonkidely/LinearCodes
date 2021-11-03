@@ -5,14 +5,15 @@
 #include "decoder.h"
 #include "ui.h"
 #include <vector>
+#include <memory>
 
 class Controller;
 
 class Factory {
 private:
-    std::vector<Encoder *> encoders;
-    std::vector<Decoder *> decoders;
-    UI *ui;
+    std::vector<std::shared_ptr<Encoder>> encoders;
+    std::vector<std::shared_ptr<Decoder>> decoders;
+    std::shared_ptr<UI> ui;
 
     TypeOfUserInterface ui_type;
 
@@ -23,11 +24,11 @@ private:
 public:
     explicit Factory(TypeOfUserInterface ui_param_type);
 
-    UI *GetUserInterface(Controller *controller);
+    std::shared_ptr<UI> GetUserInterface(std::shared_ptr<Controller> controller);
 
-    Encoder *GetEncoder(TypeOfCode code_type);
+    std::shared_ptr<Encoder> GetEncoder(TypeOfCode code_type);
 
-    Decoder *GetDecoder(TypeOfCode code_type);
+    std::shared_ptr<Decoder> GetDecoder(TypeOfCode code_type);
 };
 
 #endif //LINEARCODES_FACTORY_H

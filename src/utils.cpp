@@ -2,7 +2,7 @@
 #include <algorithm>
 
 bool IsCorrectNumber(const std::wstring &str) {
-    bool is_correct = true;
+    bool is_correct = str.length() > 0;
     for (wchar_t i: str) {
         if (i < static_cast<wchar_t>('0') || i > static_cast<wchar_t>('9'))
             is_correct = false;

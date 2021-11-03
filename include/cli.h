@@ -3,13 +3,14 @@
 
 #include "ui.h"
 #include "code.h"
+#include <memory>
 
 class Controller;
 
 class CLI : public UI {
 private:
 
-    Controller *controller;
+    std::shared_ptr<Controller> controller;
 
     bool GetChoiceResult(int lower_bound, int upper_bound, int &choice);
 
@@ -27,9 +28,9 @@ private:
 
 public:
 
-    explicit CLI(Controller *controller_param);
+    explicit CLI(std::shared_ptr<Controller> controller_param);
 
-    void PrintMessage(std::wstring message) override;
+    void PrintMessage(const std::wstring &message) override;
 
     std::wstring ReadMessage() override;
 

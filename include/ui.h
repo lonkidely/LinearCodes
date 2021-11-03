@@ -10,7 +10,7 @@ enum TypeOfUserInterface : int {
 
 class UI {
 public:
-    virtual void PrintMessage(std::wstring message) = 0;
+    virtual void PrintMessage(const std::wstring &message) = 0;
 
     virtual std::wstring ReadMessage() = 0;
 

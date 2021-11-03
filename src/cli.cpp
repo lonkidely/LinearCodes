@@ -3,12 +3,13 @@
 #include "../include/utils.h"
 #include <iostream>
 #include <algorithm>
+#include <utility>
 
-CLI::CLI(Controller *controller_param) {
-    controller = controller_param;
+CLI::CLI(std::shared_ptr<Controller> controller_param) {
+    controller = std::move(controller_param);
 }
 
-void CLI::PrintMessage(std::wstring message) {
+void CLI::PrintMessage(const std::wstring &message) {
     std::wcout << message << "\n";
 }
 
