@@ -1,4 +1,4 @@
-#include "../include/utils.h"
+#include "utils.h"
 #include <algorithm>
 
 bool IsCorrectNumber(const std::wstring &str) {

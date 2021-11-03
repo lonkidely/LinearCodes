@@ -1,4 +1,4 @@
-#include "../include/controller.h"
+#include "controller.h"
 
 Controller::Controller(std::shared_ptr<Factory> factory_param) {
     factory = std::move(factory_param);

@@ -1,7 +1,7 @@
 #ifndef LINEARCODES_ENCODER_H
 #define LINEARCODES_ENCODER_H
 
-#include "code.h"
+#include "../code/code.h"
 
 
 class Encoder {

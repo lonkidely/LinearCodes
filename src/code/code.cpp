@@ -1,4 +1,4 @@
-#include "../include/code.h"
+#include "code.h"
 #include <algorithm>
 
 Code::Code(const std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size) {

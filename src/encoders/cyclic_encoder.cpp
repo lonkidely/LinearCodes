@@ -1,5 +1,5 @@
-#include "../include/cyclic_encoder.h"
-#include "../include/utils.h"
+#include "cyclic_encoder.h"
+#include "../utils.h"
 
 TypeOfCode CyclicEncoder::GetType() {
     return TypeOfCode::kCycleCode;

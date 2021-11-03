@@ -1,9 +1,9 @@
-#include "../include/factory.h"
-#include "../include/cli.h"
-#include "../include/hamming_decoder.h"
-#include "../include/hamming_encoder.h"
-#include "../include/cyclic_decoder.h"
-#include "../include/cyclic_encoder.h"
+#include "factory.h"
+#include "ui/cli.h"
+#include "decoders/hamming_decoder.h"
+#include "encoders/hamming_encoder.h"
+#include "decoders/cyclic_decoder.h"
+#include "encoders/cyclic_encoder.h"
 
 
 Factory::Factory(TypeOfUserInterface ui_type_param) {

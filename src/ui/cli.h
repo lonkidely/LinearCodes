@@ -2,7 +2,7 @@
 #define LINEARCODES_CLI_H
 
 #include "ui.h"
-#include "code.h"
+#include "../code/code.h"
 #include <memory>
 
 class Controller;

@@ -1,9 +1,8 @@
-#include "../include/cli.h"
-#include "../include/controller.h"
-#include "../include/utils.h"
+#include "cli.h"
+#include "../controller.h"
+#include "../utils.h"
 #include <iostream>
 #include <algorithm>
-#include <utility>
 
 CLI::CLI(std::shared_ptr<Controller> controller_param) {
     controller = std::move(controller_param);

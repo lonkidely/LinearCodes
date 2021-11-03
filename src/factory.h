@@ -1,9 +1,9 @@
 #ifndef LINEARCODES_FACTORY_H
 #define LINEARCODES_FACTORY_H
 
-#include "encoder.h"
-#include "decoder.h"
-#include "ui.h"
+#include "encoders/encoder.h"
+#include "decoders/decoder.h"
+#include "ui/ui.h"
 #include <vector>
 #include <memory>
 
