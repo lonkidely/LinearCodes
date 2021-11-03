@@ -1,6 +1,4 @@
 #include "../include/factory.h"
-
-#include <utility>
 #include "../include/cli.h"
 #include "../include/hamming_decoder.h"
 #include "../include/hamming_encoder.h"
@@ -18,14 +16,14 @@ Factory::Factory(TypeOfUserInterface ui_type_param) {
 std::shared_ptr<UI> Factory::GetUserInterface(std::shared_ptr<Controller> controller) {
     if (ui_type == kCLI) {
         if (ui == nullptr) {
-            ui = std::make_unique<CLI>(CLI(std::move(controller)));
+            ui = std::make_shared<CLI>(CLI(std::move(controller)));
         }
     } else {
         if (ui == nullptr) {
             //ui = new GUI(controller);
         }
     }
-    return std::move(ui);
+    return ui;
 }
 
 void Factory::AddEncoder(TypeOfCode code_type) {
