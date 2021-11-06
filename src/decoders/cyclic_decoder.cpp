@@ -1,8 +1,35 @@
 #include "cyclic_decoder.h"
-#include "../utils.h"
+#include "../code/cyclic_code.h"
 
 TypeOfCode CyclicDecoder::GetType() {
-    return TypeOfCode::kCycleCode;
+    return TypeOfCode::kCyclicCode;
+}
+
+std::tuple<bool, bool, bool> CyclicDecoder::DivPolynom(std::deque<bool> deq) {
+    std::deque<bool> divider, remainder;
+    divider.push_back(true);
+    divider.push_back(true);
+    divider.push_back(false);
+    divider.push_back(true);
+
+    while (deq.size() > 3) {
+        for (size_t i = 0; i < 4; ++i) {
+            remainder.push_front(deq.back() ^ divider[3 - i]);
+            deq.pop_back();
+        }
+
+        while (!remainder.empty()) {
+            if (remainder.size() == 1 && !remainder.front()) {
+                remainder.pop_front();
+                break;
+            }
+            deq.push_back(remainder.front());
+            remainder.pop_front();
+        }
+    }
+
+    std::tuple<bool, bool, bool> result = std::make_tuple(deq[0], deq[1], deq[2]);
+    return result;
 }
 
 int CyclicDecoder::GetPosOfIncorrectBit(const std::tuple<bool, bool, bool> &reminder) {
@@ -38,17 +65,16 @@ int CyclicDecoder::GetPosOfIncorrectBit(const std::tuple<bool, bool, bool> &remi
     return pos;
 }
 
-std::pair<CodeBlock, bool> CyclicDecoder::DecodeCodeBlock(const CodeBlock &code_block_param) {
-    CodeBlock result_block{};
-    result_block.size = block_size;
-    result_block.code = new bool[block_size];
+std::pair<CodeBlock<bool>, bool> CyclicDecoder::DecodeCodeBlock(const CodeBlock<bool> &code_block_param) {
+    CodeBlock<bool> result_block{};
+    result_block.code.resize(decoded_block_size);
 
-    for (size_t i = 0; i < block_size; ++i) {
+    for (size_t i = 0; i < decoded_block_size; ++i) {
         result_block.code[i] = code_block_param.code[i + 3];
     }
 
     std::deque<bool> dividend;
-    for (size_t i = 0; i < code_block_param.size; ++i) {
+    for (size_t i = 0; i < code_block_param.code.size(); ++i) {
         dividend.push_back(code_block_param.code[i]);
     }
 
@@ -61,14 +87,18 @@ std::pair<CodeBlock, bool> CyclicDecoder::DecodeCodeBlock(const CodeBlock &code_
     return std::make_pair(result_block, error_has_been_found);
 }
 
-std::pair<Code, bool> CyclicDecoder::Decode(const Code &code) {
+std::pair<std::wstring, bool> CyclicDecoder::Decode(const std::wstring &code_param) {
+    CyclicCode code(code_param, encoded_block_size);
     size_t count_blocks = code.GetBlocksCount();
-    auto *result_blocks = new CodeBlock[count_blocks];
+    std::vector<CodeBlock<bool>> result_blocks(count_blocks);
+
     bool errors_have_been_found = false;
     for (size_t i = 0; i < count_blocks; ++i) {
-        std::pair<CodeBlock, bool> res = DecodeCodeBlock(code.GetCodeBlock(i));
+        std::pair<CodeBlock<bool>, bool> res = DecodeCodeBlock(code.GetCodeBlock(i));
         result_blocks[i] = res.first;
         errors_have_been_found |= res.second;
     }
-    return std::make_pair(Code(result_blocks, count_blocks, code.GetCodeType()), errors_have_been_found);
+
+    CyclicCode result(result_blocks);
+    return std::make_pair(result.GetCodeWString(), errors_have_been_found);
 }

@@ -11,9 +11,11 @@ public:
 
     void Work();
 
-    Code EncodeMessage(Code &code_param);
+    bool IsCodeCorrect(const std::wstring &code_param, TypeOfCode code_type);
 
-    std::pair<Code, bool> DecodeMessage(Code &code_param);
+    std::wstring EncodeMessage(const std::wstring &code_param, TypeOfCode code_type);
+
+    std::pair<std::wstring, bool> DecodeMessage(const std::wstring &code_param, TypeOfCode code_type);
 };
 
 #endif //LINEARCODES_CONTROLLER_H

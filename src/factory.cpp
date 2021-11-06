@@ -4,9 +4,11 @@
 #include "encoders/hamming_encoder.h"
 #include "decoders/cyclic_decoder.h"
 #include "encoders/cyclic_encoder.h"
-
+#include "code/hamming_code.h"
+#include "code/cyclic_code.h"
 
 Factory::Factory(TypeOfUserInterface ui_type_param) {
+    codes = std::vector<std::shared_ptr<Code>>();
     encoders = std::vector<std::shared_ptr<Encoder>>();
     decoders = std::vector<std::shared_ptr<Decoder>>();
     ui_type = ui_type_param;
@@ -26,11 +28,34 @@ std::shared_ptr<UI> Factory::GetUserInterface(std::shared_ptr<Controller> contro
     return ui;
 }
 
+void Factory::AddCode(TypeOfCode code_type) {
+    switch (code_type) {
+        case TypeOfCode::kHamming:
+            codes.push_back(std::make_shared<HammingCode>());
+            break;
+        case TypeOfCode::kCyclicCode:
+            codes.push_back(std::make_shared<CyclicCode>());
+            break;
+    }
+}
+
+std::shared_ptr<Code> Factory::GetCode(TypeOfCode code_type) {
+    for (auto &code: codes) {
+        if (code->GetCodeType() == code_type)
+            return code;
+    }
+    AddCode(code_type);
+    return codes.back();
+}
+
 void Factory::AddEncoder(TypeOfCode code_type) {
-    if (code_type == TypeOfCode::kHamming) {
-        encoders.push_back(std::make_shared<HammingEncoder>());
-    } else {
-        encoders.push_back(std::make_shared<CyclicEncoder>());
+    switch (code_type) {
+        case TypeOfCode::kHamming:
+            encoders.push_back(std::make_shared<HammingEncoder>());
+            break;
+        case TypeOfCode::kCyclicCode:
+            encoders.push_back(std::make_shared<CyclicEncoder>());
+            break;
     }
 }
 
@@ -44,10 +69,13 @@ std::shared_ptr<Encoder> Factory::GetEncoder(TypeOfCode code_type) {
 }
 
 void Factory::AddDecoder(TypeOfCode code_type) {
-    if (code_type == TypeOfCode::kHamming) {
-        decoders.push_back(std::make_shared<HammingDecoder>());
-    } else {
-        decoders.push_back(std::make_shared<CyclicDecoder>());
+    switch (code_type) {
+        case TypeOfCode::kHamming:
+            decoders.push_back(std::make_shared<HammingDecoder>());
+            break;
+        case TypeOfCode::kCyclicCode:
+            decoders.push_back(std::make_shared<CyclicDecoder>());
+            break;
     }
 }
 

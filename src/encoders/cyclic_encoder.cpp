@@ -1,17 +1,43 @@
 #include "cyclic_encoder.h"
-#include "../utils.h"
+#include "../code/cyclic_code.h"
 
 TypeOfCode CyclicEncoder::GetType() {
-    return TypeOfCode::kCycleCode;
+    return TypeOfCode::kCyclicCode;
 }
 
-CodeBlock CyclicEncoder::EncodeCodeBlock(const CodeBlock &code_block_param) {
-    CodeBlock result_block{};
-    result_block.size = block_size;
-    result_block.code = new bool[block_size];
+std::tuple<bool, bool, bool> CyclicEncoder::DivPolynom(std::deque<bool> deq) {
+    std::deque<bool> divider, remainder;
+    divider.push_back(true);
+    divider.push_back(true);
+    divider.push_back(false);
+    divider.push_back(true);
+
+    while (deq.size() > 3) {
+        for (size_t i = 0; i < 4; ++i) {
+            remainder.push_front(deq.back() ^ divider[3 - i]);
+            deq.pop_back();
+        }
+
+        while (!remainder.empty()) {
+            if (remainder.size() == 1 && !remainder.front()) {
+                remainder.pop_front();
+                break;
+            }
+            deq.push_back(remainder.front());
+            remainder.pop_front();
+        }
+    }
+
+    std::tuple<bool, bool, bool> result = std::make_tuple(deq[0], deq[1], deq[2]);
+    return result;
+}
+
+CodeBlock<bool> CyclicEncoder::EncodeCodeBlock(const CodeBlock<bool> &code_block_param) {
+    CodeBlock<bool> result_block{};
+    result_block.code.resize(encoded_block_size);
 
     std::deque<bool> dividend;
-    for (size_t i = 0; i < code_block_param.size; ++i) {
+    for (size_t i = 0; i < decoded_block_size; ++i) {
         dividend.push_back(code_block_param.code[i]);
         result_block.code[i + 3] = code_block_param.code[i];
     }
@@ -27,12 +53,15 @@ CodeBlock CyclicEncoder::EncodeCodeBlock(const CodeBlock &code_block_param) {
     return result_block;
 }
 
-Code CyclicEncoder::Encode(const Code &code) {
+std::wstring CyclicEncoder::Encode(const std::wstring &code_param) {
+    CyclicCode code(code_param, decoded_block_size);
     size_t count_blocks = code.GetBlocksCount();
-    auto *result_blocks = new CodeBlock[count_blocks];
+    std::vector<CodeBlock<bool>> result_blocks(count_blocks);
+
     for (size_t i = 0; i < count_blocks; ++i) {
         result_blocks[i] = EncodeCodeBlock(code.GetCodeBlock(i));
     }
-    Code result(result_blocks, count_blocks, code.GetCodeType());
-    return result;
+
+    CyclicCode result(result_blocks);
+    return result.GetCodeWString();
 }

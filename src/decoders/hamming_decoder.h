@@ -5,13 +5,14 @@
 
 class HammingDecoder : public Decoder {
 private:
-    static const size_t block_size = 4;
+    static const size_t decoded_block_size = 4;
+    static const size_t encoded_block_size = 7;
 public:
     TypeOfCode GetType() override;
 
-    static std::pair<CodeBlock, bool> DecodeCodeBlock(const CodeBlock &code_block_param);
+    static std::pair<CodeBlock<bool>, bool> DecodeCodeBlock(const CodeBlock<bool> &code_block_param);
 
-    std::pair<Code, bool> Decode(const Code &code) override;
+    std::pair<std::wstring, bool> Decode(const std::wstring &code_param) override;
 };
 
 #endif //LINEARCODES_HAMMING_DECODER_H

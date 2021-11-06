@@ -3,12 +3,11 @@
 
 #include "../code/code.h"
 
-
 class Decoder {
 public:
     virtual TypeOfCode GetType() = 0;
 
-    virtual std::pair<Code, bool> Decode(const Code &code_param) = 0;
+    virtual std::pair<std::wstring, bool> Decode(const std::wstring &code_param) = 0;
 
     virtual ~Decoder() = default;
 };

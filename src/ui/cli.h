@@ -9,30 +9,24 @@ class Controller;
 
 class CLI : public UI {
 private:
-
     std::shared_ptr<Controller> controller;
 
     bool GetChoiceResult(int lower_bound, int upper_bound, int &choice);
 
-    static bool IsCodeCorrect(std::wstring &message);
-
-    std::wstring ReadCodeString();
-
-    static Code GetCodeFromString(std::wstring &message, TypeOfCode &code_type, size_t code_block_size);
-
-    Code ReadCode(TypeOfCode &code_type, size_t code_block_size);
+    std::wstring ReadCodeString(TypeOfCode code_type);
 
     void Encode();
 
     void Decode();
 
 public:
-
     explicit CLI(std::shared_ptr<Controller> controller_param);
 
     void PrintMessage(const std::wstring &message) override;
 
     std::wstring ReadMessage() override;
+
+    static bool IsCorrectNumber(const std::wstring &str);
 
     void Start() override;
 };

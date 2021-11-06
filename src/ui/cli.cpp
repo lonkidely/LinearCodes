@@ -1,8 +1,6 @@
 #include "cli.h"
 #include "../controller.h"
-#include "../utils.h"
 #include <iostream>
-#include <algorithm>
 
 CLI::CLI(std::shared_ptr<Controller> controller_param) {
     controller = std::move(controller_param);
@@ -16,6 +14,15 @@ std::wstring CLI::ReadMessage() {
     std::wstring input_message;
     std::getline(std::wcin, input_message, (wchar_t) '\n');
     return input_message;
+}
+
+bool CLI::IsCorrectNumber(const std::wstring &str) {
+    bool is_correct = str.length() > 0;
+    for (wchar_t i: str) {
+        if (i < static_cast<wchar_t>('0') || i > static_cast<wchar_t>('9'))
+            is_correct = false;
+    }
+    return is_correct;
 }
 
 bool CLI::GetChoiceResult(int lower_bound, int upper_bound, int &choice) {
@@ -59,38 +66,19 @@ void CLI::Start() {
     }
 }
 
-bool CLI::IsCodeCorrect(std::wstring &message) {
-    bool code_is_correct = true;
-    for (wchar_t i: message) {
-        if (static_cast<int>(i - '0') != 0 && static_cast<int>(i - '0') != 1)
-            code_is_correct = false;
-    }
-    return code_is_correct;
-}
-
-Code CLI::GetCodeFromString(std::wstring &message, TypeOfCode &code_type, size_t code_block_size) {
-    std::reverse(message.begin(), message.end());
-    return {message, code_type, code_block_size};
-}
-
-std::wstring CLI::ReadCodeString() {
+std::wstring CLI::ReadCodeString(TypeOfCode code_type) {
     std::wstring message;
     bool is_correct_code = false;
     while (!is_correct_code) {
         is_correct_code = true;
         PrintMessage(L"Введите сообщение (последовательность из 0 и 1 без пробелов)");
         message = ReadMessage();
-        if (!IsCodeCorrect(message)) {
+        if (!controller->IsCodeCorrect(message, code_type)) {
             PrintMessage(L"Вы ввели некорректное значение");
             is_correct_code = false;
         }
     }
     return message;
-}
-
-Code CLI::ReadCode(TypeOfCode &code_type, size_t code_block_size) {
-    std::wstring code = ReadCodeString();
-    return GetCodeFromString(code, code_type, code_block_size);
 }
 
 void CLI::Encode() {
@@ -113,14 +101,13 @@ void CLI::Encode() {
         if (command == 1)
             code_type = TypeOfCode::kHamming;
         else
-            code_type = TypeOfCode::kCycleCode;
+            code_type = TypeOfCode::kCyclicCode;
 
-        Code code_to_encode = ReadCode(code_type, 4);
-        Code result_of_encoding = controller->EncodeMessage(code_to_encode);
+        std::wstring code_to_encode = ReadCodeString(code_type);
 
+        std::wstring result_of_encoding = controller->EncodeMessage(code_to_encode, code_type);
         PrintMessage(L"В закодированном виде:");
-        std::wstring result = result_of_encoding.GetCodeWString();
-        PrintMessage(result);
+        PrintMessage(result_of_encoding);
 
         encode_is_not_ended = false;
     }
@@ -147,18 +134,17 @@ void CLI::Decode() {
         if (command == 1)
             code_type = TypeOfCode::kHamming;
         else
-            code_type = TypeOfCode::kCycleCode;
+            code_type = TypeOfCode::kCyclicCode;
 
-        Code code_to_decode = ReadCode(code_type, 7);
+        std::wstring code_to_decode = ReadCodeString(code_type);
 
-        std::pair<Code, bool> result_of_decoding = controller->DecodeMessage(code_to_decode);
+        std::pair<std::wstring, bool> result_of_decoding = controller->DecodeMessage(code_to_decode, code_type);
         if (result_of_decoding.second) {
             PrintMessage(L"В коде была обнаружена ошибка");
         }
 
         PrintMessage(L"В раскодированном виде:");
-        std::wstring result = result_of_decoding.first.GetCodeWString();
-        PrintMessage(result);
+        PrintMessage(result_of_decoding.first);
 
         decode_is_not_ended = false;
     }

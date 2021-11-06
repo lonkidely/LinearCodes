@@ -8,10 +8,14 @@ void Controller::Work() {
     factory->GetUserInterface(std::make_shared<Controller>(*this))->Start();
 }
 
-Code Controller::EncodeMessage(Code &code_param) {
-    return factory->GetEncoder(code_param.GetCodeType())->Encode(code_param);
+bool Controller::IsCodeCorrect(const std::wstring &code_param, TypeOfCode code_type) {
+    return factory->GetCode(code_type)->IsCodeCorrect(code_param);
 }
 
-std::pair<Code, bool> Controller::DecodeMessage(Code &code_param) {
-    return factory->GetDecoder(code_param.GetCodeType())->Decode(code_param);
+std::wstring Controller::EncodeMessage(const std::wstring &code_param, TypeOfCode code_type) {
+    return factory->GetEncoder(code_type)->Encode(code_param);
+}
+
+std::pair<std::wstring, bool> Controller::DecodeMessage(const std::wstring &code_param, TypeOfCode code_type) {
+    return factory->GetDecoder(code_type)->Decode(code_param);
 }

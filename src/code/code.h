@@ -1,38 +1,30 @@
 #ifndef LINEARCODES_CODE_H
 #define LINEARCODES_CODE_H
 
+#include <deque>
 #include <string>
 
 enum class TypeOfCode : int {
     kHamming,
-    kCycleCode
+    kCyclicCode
 };
 
+template<typename T>
 struct CodeBlock {
-    bool *code;
-    size_t size;
+    std::deque<T> code;
 };
 
 class Code {
-private:
-    CodeBlock *code_blocks;
-    size_t blocks_count;
-    TypeOfCode code_type;
 public:
+    virtual TypeOfCode GetCodeType() const = 0;
 
-    Code(const std::wstring &code_param, TypeOfCode code_type_param, size_t code_block_size);
+    virtual bool IsCodeCorrect(const std::wstring &code_param) const = 0;
 
-    Code(const CodeBlock *blocks_param, size_t blocks_count_param, TypeOfCode code_type_param);
+    virtual size_t GetBlocksCount() const = 0;
 
-    Code(const Code &code_param);
+    virtual std::wstring GetCodeWString() const = 0;
 
-    TypeOfCode GetCodeType() const;
-
-    size_t GetBlocksCount() const;
-
-    CodeBlock &GetCodeBlock(size_t index) const;
-
-    std::wstring GetCodeWString() const;
+    virtual ~Code() = default;
 };
 
 #endif //LINEARCODES_CODE_H
